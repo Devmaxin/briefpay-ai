@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AuthForm } from "@/components/auth-form";
@@ -7,10 +6,10 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 
 export const metadata: Metadata = { title: "Create account" };
 
-// Reads the session cookie — render per request, not prerender.
+// Reads the session cookie — must render per request, not prerender.
+export const dynamic = "force-dynamic";
 
 export default async function SignupPage() {
-  await connection(); // session cookie — render per request, not prerender.
   try {
     const supabase = await createClient();
     const {

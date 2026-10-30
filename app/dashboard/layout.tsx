@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/env";
@@ -7,14 +6,14 @@ import { DashboardShell } from "@/components/dashboard-shell";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-// Authenticated shell — render per request, not prerender.
+// Authenticated shell — must render per request, not prerender.
+export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await connection(); // session cookie — render per request, not prerender.
   if (!isSupabaseConfigured()) {
     return (
       <div className="mx-auto max-w-xl px-4 py-16">

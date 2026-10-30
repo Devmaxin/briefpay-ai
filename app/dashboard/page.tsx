@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { PlusCircle, ArrowUpRight } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent } from "@/components/ui/card";
-import { StatusBadge, Badge } from "@/components/ui/badge";
-import { formatMoney, timeAgo } from "@/lib/utils";
+import { formatMoney } from "@/lib/utils";
 import { EmptyProposals } from "@/components/dashboard-shell";
+import { DemoProposalList, ProposalList } from "@/components/proposal-list";
 import type { ProposalRow } from "@/lib/types";
 
 const DEMO_ROWS: (ProposalRow & { demo: true })[] = [
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
 
   const rows = ((proposals ?? []) as ProposalRow[]);
   const showingDemo = rows.length === 0;
-  const list: (ProposalRow & { demo?: true })[] = showingDemo ? DEMO_ROWS : rows;
+  const list: ProposalRow[] = showingDemo ? DEMO_ROWS : rows;
 
   const open = list.filter((p) => p.status === "draft").length;
   const awaiting = list.filter((p) => p.status === "approved").length;
@@ -121,51 +121,15 @@ export default async function DashboardPage() {
         </p>
       )}
 
-      {rows.length === 0 && !showingDemo ? (
-        <EmptyProposals />
+      {rows.length === 0 ? (
+        showingDemo ? (
+          <DemoProposalList rows={DEMO_ROWS} />
+        ) : (
+          <EmptyProposals />
+        )
       ) : (
-        <Card>
-          <ul className="divide-y divide-line">
-            {list.map((p) => (
-              <li key={p.id}>
-                {"demo" in p ? (
-                  <div className="flex items-center gap-4 px-5 py-4 opacity-80" aria-label={`${p.title} (demo preview)`}>
-                    <RowBody proposal={p} />
-                    <Badge variant="neutral">demo</Badge>
-                  </div>
-                ) : (
-                  <Link
-                    href={`/dashboard/proposals/${p.id}`}
-                    className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-parchment"
-                  >
-                    <RowBody proposal={p} />
-                    <ArrowUpRight className="size-4 shrink-0 text-ink-mute" aria-hidden />
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </Card>
+        <ProposalList rows={rows} />
       )}
-    </div>
-  );
-}
-
-function RowBody({ proposal: p }: { proposal: ProposalRow }) {
-  return (
-    <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0">
-        <p className="truncate font-medium text-ink">{p.title}</p>
-        <p className="text-xs text-ink-mute">
-          Updated {timeAgo(p.updated_at)} · {p.estimated_timeline || "timeline TBD"}
-        </p>
-      </div>
-      <div className="flex shrink-0 items-center gap-3">
-        <span className="font-mono text-sm font-semibold">
-          {formatMoney(Number(p.price), p.currency)}
-        </span>
-        <StatusBadge status={p.status} />
-      </div>
     </div>
   );
 }

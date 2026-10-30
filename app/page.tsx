@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { MarketingPage } from "@/components/marketing-page";
@@ -10,9 +9,10 @@ export const metadata: Metadata = {
     "BriefPay AI helps freelancers clarify project requirements, prepare professional proposals, and collect payments through PayPal.",
 };
 
-// Reads the session cookie — render per request, not prerender.
+// Reads the session cookie — must render per request, not prerender.
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
-  await connection();
   let signedIn = false;
   try {
     const supabase = await createClient();

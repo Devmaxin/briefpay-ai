@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { lookupByToken } from "@/lib/share";
 import { publicEnv } from "@/lib/env";
@@ -10,7 +9,8 @@ import { CheckoutPanel } from "@/components/checkout-panel";
 
 export const metadata: Metadata = { title: "Proposal" };
 
-// Token-scoped lookup — render per request, not prerender.
+// Token-scoped lookup — must render per request, not prerender.
+export const dynamic = "force-dynamic";
 
 export default async function PublicProposalPage({
   params,
@@ -18,7 +18,6 @@ export default async function PublicProposalPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
-  await connection(); // token-scoped lookup — render per request, not prerender.
   let found: Awaited<ReturnType<typeof lookupByToken>>;
   try {
     found = await lookupByToken(token);
