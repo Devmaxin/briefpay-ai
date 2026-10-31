@@ -85,6 +85,7 @@ export interface PayPalAmount {
 export interface PayPalOrder {
   id: string;
   status: string;
+  payer?: { email_address?: string };
   purchase_units?: {
     amount: PayPalAmount;
     payee?: { email_address?: string; merchant_id?: string };
@@ -158,6 +159,7 @@ export interface VerifiedCapture {
   amount: number;
   currency: string;
   payerEmail: string | null;
+  payeeEmail: string | null;
 }
 
 /**
@@ -199,6 +201,7 @@ export function verifyCapture(
     captureStatus: capture?.status ?? null,
     amount,
     currency,
-    payerEmail: null,
+    payerEmail: order.payer?.email_address ?? null,
+    payeeEmail: unit?.payee?.email_address ?? null,
   };
 }

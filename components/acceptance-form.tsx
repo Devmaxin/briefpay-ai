@@ -10,6 +10,7 @@ interface AcceptanceFormProps {
   token: string;
   amount: number;
   currency: string;
+  onAccept?: () => void;
 }
 
 async function api<T>(url: string, body: unknown): Promise<T> {
@@ -55,6 +56,7 @@ export function AcceptanceForm({
           terms_agreed: true,
         },
       );
+      onAccept?.();
       setPhase("accepted");
     } catch (e) {
       setError(

@@ -4,7 +4,7 @@ import { lookupByToken } from "@/lib/share";
 import { formatMoney } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/brand";
-import { AcceptanceForm } from "@/components/acceptance-form";
+import { CheckoutFlow } from "@/components/checkout-flow";
 
 export const metadata: Metadata = { title: "Proposal" };
 
@@ -211,7 +211,7 @@ export default async function PublicProposalPage({
           )}
         </div>
 
-        <AcceptanceForm
+        <CheckoutFlow
           token={token}
           amount={Number(version.price)}
           currency={version.currency}
