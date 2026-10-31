@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { lookupByToken } from "@/lib/share";
-import { publicEnv } from "@/lib/env";
 import { formatMoney } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/brand";
-import { CheckoutPanel } from "@/components/checkout-panel";
+import { AcceptanceForm } from "@/components/acceptance-form";
 
 export const metadata: Metadata = { title: "Proposal" };
 
@@ -28,14 +27,101 @@ export default async function PublicProposalPage({
   const { proposal, version } = found;
   const snap = version.snapshot;
   const paid = proposal.status === "paid";
+  const revoked = Boolean(proposal.revoked_at);
 
+  // A revoked link cannot be viewed or accepted.
+  if (revoked) {
+    return (
+      <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-4 py-8 sm:py-12">
+        <header className="flex items-center justify-between">
+          <Logo />
+        </header>
+        <main className="mt-6 flex flex-col gap-6">
+          <div className="proposal-paper rounded-[var(--radius-card)] border border-line bg-white p-6 shadow-[var(--shadow-card)] sm:p-10 text-center">
+            <h1 className="font-display text-3xl font-semibold sm:text-4xl">
+              Link revoked
+            </h1>
+            <p className="mt-3 text-ink-soft">
+              The freelancer has revoked this proposal link. It can no longer
+              be viewed or accepted.
+            </p>
+          </div>
+          <footer className="pb-8 text-center text-xs text-ink-mute">
+            Sent with BriefPay AI · BriefPay holds no funds and provides no
+            escrow.
+          </footer>
+        </main>
+      </div>
+    );
+  }
+
+  // Already paid: show the verified state, no acceptance needed.
+  if (paid) {
+    return (
+      <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-4 py-8 sm:py-12">
+        <header className="flex items-center justify-between">
+          <Logo />
+          <Badge variant="paid">Paid</Badge>
+        </header>
+        <main className="mt-6 flex flex-col gap-6">
+          <div className="proposal-paper rounded-[var(--radius-card)] border border-line bg-white p-6 shadow-[var(--shadow-card)] sm:p-10">
+            <p className="font-mono text-[11px] tracking-[0.12em] text-ink-mute uppercase">
+              Proposal · v{version.version_number} · Accepted &amp; paid{" "}
+              {new Date(proposal.accepted_at ?? proposal.updated_at).toLocaleDateString("en-US", {
+                month: "short", day: "numeric", year: "numeric",
+              })}
+            </p>
+            <h1 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
+              {snap.title}
+            </h1>
+            <p className="mt-3 leading-relaxed text-ink-soft">{snap.summary}</p>
+            <div className="mt-8 grid gap-4 rounded-2xl bg-parchment p-5 sm:grid-cols-3">
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">
+                  Total due
+                </p>
+                <p className="mt-1 font-mono text-2xl font-semibold text-verified">
+                  {formatMoney(Number(version.price), version.currency)}
+                </p>
+              </div>
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">
+                  Status
+                </p>
+                <p className="mt-1 text-sm text-verified">Accepted &amp; paid</p>
+              </div>
+              <div>
+                <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">
+                  Timeline
+                </p>
+                <p className="mt-1 font-medium">{snap.estimated_timeline}</p>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-verified/40 bg-verified-soft p-6 text-center">
+            <p className="font-mono text-lg font-semibold text-verified">
+              Accepted — thank you.
+            </p>
+            <p className="mt-1 text-sm text-ink-soft">
+              Your acceptance of this proposal has been recorded.
+            </p>
+          </div>
+          <footer className="pb-8 text-center text-xs text-ink-mute">
+            Sent with BriefPay AI · BriefPay holds no funds and provides no
+            escrow.
+          </footer>
+        </main>
+      </div>
+    );
+  }
+
+  // Not yet accepted: show the acceptance form.
   return (
     <div className="mx-auto flex min-h-full w-full max-w-3xl flex-col px-4 py-8 sm:py-12">
       <header className="flex items-center justify-between">
         <Logo />
         <Badge variant="sandbox">Sandbox demo</Badge>
       </header>
-
       <main className="mt-6 flex flex-col gap-6">
         <div className="proposal-paper rounded-[var(--radius-card)] border border-line bg-white p-6 shadow-[var(--shadow-card)] sm:p-10">
           <p className="font-mono text-[11px] tracking-[0.12em] text-ink-mute uppercase">
@@ -48,6 +134,10 @@ export default async function PublicProposalPage({
             {snap.title}
           </h1>
           <p className="mt-3 leading-relaxed text-ink-soft">{snap.summary}</p>
+
+          <Section title="Scope of work">
+            <p className="text-ink-soft">{snap.summary}</p>
+          </Section>
 
           <Section title="Deliverables">
             <ul className="list-disc space-y-1.5 pl-5">
@@ -93,15 +183,21 @@ export default async function PublicProposalPage({
 
           <div className="mt-8 grid gap-4 rounded-2xl bg-parchment p-5 sm:grid-cols-3">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">Timeline</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">
+                Timeline
+              </p>
               <p className="mt-1 font-medium">{snap.estimated_timeline}</p>
             </div>
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">Revisions</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">
+                Revisions
+              </p>
               <p className="mt-1 text-sm">{snap.revision_policy}</p>
             </div>
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">Total due</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-mute">
+                Total due
+              </p>
               <p className="mt-1 font-mono text-2xl font-semibold">
                 {formatMoney(Number(version.price), version.currency)}
               </p>
@@ -115,24 +211,28 @@ export default async function PublicProposalPage({
           )}
         </div>
 
-        <CheckoutPanel
+        <AcceptanceForm
           token={token}
           amount={Number(version.price)}
           currency={version.currency}
-          clientId={publicEnv.paypalClientId}
-          proposalPaid={paid}
         />
 
         <footer className="pb-8 text-center text-xs text-ink-mute">
-          Sent with BriefPay AI · Payment processed by PayPal (Sandbox demo — no
-          real money) · BriefPay holds no funds and provides no escrow.
+          Sent with BriefPay AI · BriefPay holds no funds and provides no
+          escrow.
         </footer>
       </main>
     </div>
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <section className="mt-7">
       <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-primary-deep">

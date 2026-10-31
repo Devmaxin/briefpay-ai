@@ -78,6 +78,7 @@ export async function PATCH(
               share_token: generateShareToken(),
               approved_version_id: null,
               final_price: null,
+              accepted_at: null,
             }
           : {}),
       })

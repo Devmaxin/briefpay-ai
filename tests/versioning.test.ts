@@ -33,6 +33,8 @@ function baseProposal(overrides: Partial<ProposalRow> = {}): ProposalRow {
     share_token: null,
     approved_version_id: null,
     final_price: null,
+    revoked_at: null,
+    accepted_at: null,
     created_at: "2026-10-31T10:00:00Z",
     updated_at: "2026-10-31T10:00:00Z",
     ...overrides,

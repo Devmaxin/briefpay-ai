@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Loader2,
   Sparkles,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -64,6 +65,7 @@ export function ProposalEditor({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [approving, setApproving] = useState(false);
+  const [revoking, setRevoking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
@@ -189,6 +191,26 @@ export function ProposalEditor({ id }: { id: string }) {
       setError(e instanceof Error ? e.message : "Could not approve.");
     } finally {
       setApproving(false);
+    }
+  }
+
+  async function revokeShare() {
+    if (!proposal) return;
+    setError(null);
+    setRevoking(true);
+    try {
+      await api<{ revoked: boolean }>(
+        `/api/proposals/${proposal.id}/revoke-share`,
+        "POST",
+      );
+      // Refresh to reflect the revoked state.
+      api<{ proposal: ProposalRow }>(`/api/proposals/${proposal.id}`, "GET")
+        .then(({ proposal: p }) => setProposal(p))
+        .catch(() => {});
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not revoke link.");
+    } finally {
+      setRevoking(false);
     }
   }
 
@@ -394,6 +416,12 @@ export function ProposalEditor({ id }: { id: string }) {
                   <Button variant="secondary" onClick={approve} loading={approving}>
                     <Sparkles aria-hidden />
                     {proposal.status === "approved" ? "Re-approve & refresh link" : "Approve & get share link"}
+                  </Button>
+                )}
+                {proposal.status === "approved" && proposal.share_token && (
+                  <Button variant="danger" onClick={revokeShare} loading={revoking}>
+                    <X aria-hidden />
+                    Revoke share link
                   </Button>
                 )}
               </div>

@@ -57,8 +57,22 @@ export interface ProposalRow {
   status: ProposalStatus;
   share_token: string | null;
   approved_version_id: string | null;
+  revoked_at: string | null;
+  accepted_at: string | null;
   created_at: string;
   updated_at: string;
+}
+
+/** A recorded client acceptance of an approved proposal version. */
+export interface ProposalAcceptance {
+  id: string;
+  proposal_id: string;
+  version_id: string;
+  accepted_at: string;
+  client_name: string | null;
+  client_email: string | null;
+  terms_agreed: boolean;
+  created_at: string;
 }
 
 /** Proposal row enriched with the brief's client/project identity. */
