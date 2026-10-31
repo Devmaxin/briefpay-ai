@@ -3,24 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fail, ok, requireUser, toApiError, zodFail } from "@/lib/api";
 import { UpdateProposalSchema } from "@/lib/validation";
 import { generateShareToken } from "@/lib/utils";
-import type { ProposalRow, ProposalSnapshot } from "@/lib/types";
-
-function snapshotOf(p: ProposalRow): ProposalSnapshot {
-  return {
-    title: p.title,
-    summary: p.summary,
-    assumptions: p.assumptions,
-    deliverables: p.deliverables,
-    milestones: p.milestones,
-    price: Number(p.price),
-    currency: p.currency,
-    estimated_timeline: p.estimated_timeline,
-    exclusions: p.exclusions,
-    revision_policy: p.revision_policy,
-    unresolved: p.unresolved,
-    approved_at: new Date().toISOString(),
-  };
-}
+import { snapshotOf } from "@/lib/proposal-snapshot";
+import type { ProposalRow } from "@/lib/types";
 
 async function log(supabase: Awaited<ReturnType<typeof createClient>>, ownerId: string, proposalId: string, event: string) {
   await supabase.from("activity_logs").insert({ owner_id: ownerId, proposal_id: proposalId, event });
@@ -112,6 +96,33 @@ export async function PATCH(
         .eq("status", "created");
       await log(supabase, user.id, id, "approval_invalidated_by_edit");
     }
+
+    // Persist an immutable version snapshot for every save so the freelancer
+    // has a version history they can review and revert to.
+    try {
+      const { data: latest } = await supabase
+        .from("proposal_versions")
+        .select("version_number")
+        .eq("proposal_id", id)
+        .order("version_number", { ascending: false })
+        .limit(1)
+        .single();
+      const versionNumber =
+        ((latest as { version_number: number } | null)?.version_number ?? 0) + 1;
+      await supabase.from("proposal_versions").insert({
+        proposal_id: id,
+        version_number: versionNumber,
+        snapshot: snapshotOf(updated as ProposalRow),
+        price: Number(updated.price),
+        currency: updated.currency,
+        source: "user",
+        change_summary: "Freelancer edits",
+      });
+    } catch {
+      // Versioning failures must not block the save itself.
+      console.error("[proposals] failed to record version snapshot");
+    }
+
     await log(supabase, user.id, id, "proposal_edited");
     return ok({ proposal: updated, approval_invalidated: invalidateApproval });
   } catch (error) {

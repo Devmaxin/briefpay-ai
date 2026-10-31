@@ -2,6 +2,8 @@ import { AnalyzeBriefSchema, GenerateProposalSchema } from "@/lib/validation";
 import { fail, ok, requireUser, toApiError, zodFail } from "@/lib/api";
 import { generateClarifyingQuestions, generateProposalDraft, GroqError } from "@/lib/groq";
 import { isGroqConfigured } from "@/lib/env";
+import { snapshotOf } from "@/lib/proposal-snapshot";
+import type { ProposalRow } from "@/lib/types";
 
 const DEMO_QUESTIONS = [
   { id: "q1", question: "What does success look like for this project?", why: "Defines the acceptance criteria.", optional: false },
@@ -115,9 +117,26 @@ export async function PUT(request: Request) {
         unresolved: draft.unresolved,
         status: "draft",
       })
-      .select("id")
+      .select("*")
       .single();
     if (error || !proposal) return fail("Could not create the proposal. Please try again.", 500);
+
+    // Persist the AI-generated draft as version 1 so the freelancer has an
+    // immutable record of what the AI suggested before any edits.
+    try {
+      await supabase.from("proposal_versions").insert({
+        proposal_id: proposal.id,
+        version_number: 1,
+        snapshot: snapshotOf(proposal as ProposalRow),
+        price: proposal.price,
+        currency: proposal.currency,
+        source: "ai",
+        change_summary: "AI-generated draft from brief analysis",
+      });
+    } catch {
+      // Versioning failures must not block proposal creation.
+      console.error("[briefs] failed to record initial version snapshot");
+    }
 
     await supabase
       .from("project_briefs")

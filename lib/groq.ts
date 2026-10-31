@@ -103,9 +103,17 @@ async function chatJson({ system, user, repairHint }: ChatOptions): Promise<unkn
   if (!res.ok) {
     throw new GroqError("The AI service failed. Please try again.", 502);
   }
-  const body = (await res.json()) as {
-    choices?: { message?: { content?: string } }[];
-  };
+  // Use text() so we can handle non-JSON envelopes gracefully instead of
+  // letting res.json() throw before extractJson gets a chance to repair.
+  const text = await res.text();
+  let body: { choices?: { message?: { content?: string } }[] };
+  try {
+    body = JSON.parse(text);
+  } catch {
+    throw new GroqError(
+      "The AI returned an unreadable response. Please try again.",
+    );
+  }
   const content = body.choices?.[0]?.message?.content;
   if (!content || !content.trim()) {
     throw new GroqError("The AI returned an empty response. Please try again.");
@@ -128,10 +136,20 @@ export async function generateClarifyingQuestions(
   const user = `Client request:\n"""${rawRequest}"""${
     projectType ? `\nProject type: ${projectType}` : ""
   }`;
-  const raw = await chatJson({ system: QUESTIONS_SYSTEM, user });
+  let raw: unknown;
+  try {
+    raw = await chatJson({ system: QUESTIONS_SYSTEM, user });
+  } catch {
+    // One bounded repair attempt for malformed/unreadable JSON.
+    raw = await chatJson({
+      system: QUESTIONS_SYSTEM,
+      user,
+      repairHint: "unreadable response",
+    });
+  }
   const parsed = ClarifyingQuestionsPayloadSchema.safeParse(raw);
   if (parsed.success) return parsed.data.questions;
-  // One bounded repair attempt.
+  // One bounded repair attempt for schema violations.
   const retry = await chatJson({
     system: QUESTIONS_SYSTEM,
     user,
@@ -181,7 +199,17 @@ export async function generateProposalDraft(
   const user = `Client request:\n"""${input.rawRequest}"""${
     input.projectType ? `\nProject type: ${input.projectType}` : ""
   }\nCurrency: ${input.currency}\nClarifications:\n${qa}\nSuggest a fair market price in ${input.currency}.`;
-  const raw = await chatJson({ system: PROPOSAL_SYSTEM, user });
+  let raw: unknown;
+  try {
+    raw = await chatJson({ system: PROPOSAL_SYSTEM, user });
+  } catch {
+    // One bounded repair attempt for malformed/unreadable JSON.
+    raw = await chatJson({
+      system: PROPOSAL_SYSTEM,
+      user,
+      repairHint: "unreadable response",
+    });
+  }
   const withCurrency =
     raw && typeof raw === "object" && !("currency" in (raw as object))
       ? { ...(raw as object), currency: input.currency }

@@ -44,14 +44,17 @@ export function NewBriefWizard() {
   const [currency, setCurrency] = useState("USD");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function analyze() {
+    if (loading || submitted) return;
     setError(null);
     if (raw.trim().length < 20) {
       setError("Paste at least a sentence or two about the client request.");
       return;
     }
+    setSubmitted(true);
     setLoading(true);
     try {
       const data = await api<{
@@ -72,12 +75,15 @@ export function NewBriefWizard() {
       setError(e instanceof Error ? e.message : "Could not analyze the brief.");
     } finally {
       setLoading(false);
+      setSubmitted(false);
     }
   }
 
   async function generate() {
     if (step.name !== "questions") return;
+    if (loading || submitted) return;
     setError(null);
+    setSubmitted(true);
     setLoading(true);
     try {
       const data = await api<{ proposal_id: string }>("/api/briefs", "PUT", {
@@ -92,6 +98,7 @@ export function NewBriefWizard() {
       setError(e instanceof Error ? e.message : "Could not generate the proposal.");
     } finally {
       setLoading(false);
+      setSubmitted(false);
     }
   }
 
@@ -252,7 +259,10 @@ export function NewBriefWizard() {
               </Button>
               <button
                 type="button"
-                onClick={() => setStep({ name: "brief" })}
+                onClick={() => {
+                  setStep({ name: "brief" });
+                  setSubmitted(false);
+                }}
                 className="text-sm font-medium text-ink-soft hover:text-ink hover:underline"
               >
                 Back to brief
