@@ -33,6 +33,12 @@ export async function lookupByToken(token: string): Promise<{
     );
   }
   const p = proposal as ProposalRow;
+  if (p.revoked_at) {
+    return NextResponse.json(
+      { ok: false, error: { message: "This proposal link has been revoked by the freelancer." } },
+      { status: 410 },
+    );
+  }
   if (!p.approved_version_id) {
     return NextResponse.json(
       { ok: false, error: { message: "This proposal is not ready for checkout yet." } },
