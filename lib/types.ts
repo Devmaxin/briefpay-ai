@@ -47,6 +47,8 @@ export interface ProposalRow {
   deliverables: Deliverable[];
   milestones: Milestone[];
   price: number;
+  /** Amount frozen at approval. Null while the proposal is still a draft. */
+  final_price: number | null;
   currency: string;
   estimated_timeline: string;
   exclusions: string[];
@@ -55,6 +57,31 @@ export interface ProposalRow {
   status: ProposalStatus;
   share_token: string | null;
   approved_version_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/** Proposal row enriched with the brief's client/project identity. */
+export interface DashboardProposal {
+  id: string;
+  title: string;
+  summary: string;
+  price: number;
+  final_price: number | null;
+  currency: string;
+  status: ProposalStatus;
+  estimated_timeline: string;
+  updated_at: string;
+  client_name: string | null;
+  project_name: string | null;
+}
+
+export interface ProfileRow {
+  id: string;
+  email: string | null;
+  display_name: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -88,6 +115,8 @@ export interface BriefRow {
   id: string;
   owner_id: string;
   raw_request: string;
+  project_name: string | null;
+  client_name: string | null;
   project_type: string | null;
   currency: string;
   questions: ClarifyingQuestion[] | null;

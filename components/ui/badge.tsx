@@ -30,7 +30,13 @@ export function Badge({ className, variant, ...props }: BadgeProps) {
   );
 }
 
-export function StatusBadge({ status }: { status: string }) {
+export function StatusBadge({
+  status,
+  label,
+}: {
+  status: string;
+  label?: string;
+}) {
   const variant =
     status === "paid"
       ? "paid"
@@ -48,7 +54,7 @@ export function StatusBadge({ status }: { status: string }) {
   return (
     <Badge variant={variant}>
       <span aria-hidden className={cn("size-1.5 rounded-full", dot)} />
-      {status}
+      {label ?? status}
     </Badge>
   );
 }

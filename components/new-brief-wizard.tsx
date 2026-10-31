@@ -39,6 +39,8 @@ export function NewBriefWizard() {
   const [step, setStep] = useState<Step>({ name: "brief" });
   const [raw, setRaw] = useState("");
   const [projectType, setProjectType] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [clientName, setClientName] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -59,6 +61,8 @@ export function NewBriefWizard() {
       }>("/api/briefs", "POST", {
         raw_request: raw.trim(),
         project_type: projectType.trim() || undefined,
+        project_name: projectName.trim() || undefined,
+        client_name: clientName.trim() || undefined,
         currency: currency.trim().toUpperCase() || "USD",
       });
       setStep({ name: "questions", briefId: data.brief_id, questions: data.questions, demo: data.demo_mode });
@@ -128,6 +132,26 @@ export function NewBriefWizard() {
               </p>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="pname">Project name (optional)</Label>
+                <Input
+                  id="pname"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  placeholder="Fern & Field website"
+                  maxLength={140}
+                />
+              </div>
+              <div>
+                <Label htmlFor="cname">Client name (optional)</Label>
+                <Input
+                  id="cname"
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  placeholder="Fern & Field Café"
+                  maxLength={120}
+                />
+              </div>
               <div>
                 <Label htmlFor="ptype">Project type (optional)</Label>
                 <Input

@@ -25,7 +25,9 @@ export async function POST(request: Request) {
       .insert({
         owner_id: user.id,
         raw_request: parsed.data.raw_request,
-        project_type: parsed.data.project_type ?? null,
+        project_type: parsed.data.project_type || null,
+        project_name: parsed.data.project_name || null,
+        client_name: parsed.data.client_name || null,
         currency: parsed.data.currency,
         status: "new",
       })

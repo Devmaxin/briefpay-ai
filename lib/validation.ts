@@ -48,6 +48,18 @@ export const ProjectTypeSchema = z
   .max(80, "Project type must be 80 characters or fewer.")
   .optional();
 
+export const ProjectNameSchema = z
+  .string()
+  .trim()
+  .max(140, "Project name must be 140 characters or fewer.")
+  .optional();
+
+export const ClientNameSchema = z
+  .string()
+  .trim()
+  .max(120, "Client name must be 120 characters or fewer.")
+  .optional();
+
 export const AnalyzeBriefSchema = z.object({
   raw_request: z
     .string()
@@ -55,6 +67,8 @@ export const AnalyzeBriefSchema = z.object({
     .min(20, "Please paste at least a sentence or two about the request.")
     .max(4000, "Please keep the request under 4,000 characters."),
   project_type: ProjectTypeSchema,
+  project_name: ProjectNameSchema,
+  client_name: ClientNameSchema,
   currency: CurrencySchema.default("USD"),
 });
 

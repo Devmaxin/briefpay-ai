@@ -89,7 +89,12 @@ export async function PATCH(
       .update({
         ...patch,
         ...(invalidateApproval
-          ? { status: "draft" as const, share_token: generateShareToken(), approved_version_id: null }
+          ? {
+              status: "draft" as const,
+              share_token: generateShareToken(),
+              approved_version_id: null,
+              final_price: null,
+            }
           : {}),
       })
       .eq("id", id)
@@ -167,6 +172,7 @@ export async function POST(
         status: "approved" as const,
         share_token: token,
         approved_version_id: (version as { id: string }).id,
+        final_price: Number(row.price),
       })
       .eq("id", id)
       .eq("owner_id", user.id)

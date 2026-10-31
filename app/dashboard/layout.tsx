@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser, getProfile } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/env";
 import { DashboardShell } from "@/components/dashboard-shell";
 
@@ -24,17 +24,23 @@ export default async function DashboardLayout({
           Set <code className="font-mono">NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
           <code className="font-mono">NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code>{" "}
           in <code className="font-mono">.env.local</code> (see{" "}
-          <code className="font-mono">.env.example</code>) and restart the dev
-          server.
+          <code className="font-mono">.env.example</code>), apply the migrations
+          in <code className="font-mono">supabase/migrations</code>, then restart
+          the dev server.
         </p>
       </div>
     );
   }
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  // Identity comes from the session cookie, never from the URL or client.
+  const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  return <DashboardShell email={user.email}>{children}</DashboardShell>;
+  const profile = await getProfile(user.id);
+
+  return (
+    <DashboardShell email={user.email ?? null} fullName={profile?.full_name ?? null}>
+      {children}
+    </DashboardShell>
+  );
 }
