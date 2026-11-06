@@ -22,7 +22,7 @@ export async function lookupByToken(token: string): Promise<{
   const admin = createAdminClient();
   const { data: proposal } = await admin
     .from("proposals")
-    .select("id, title, summary, assumptions, deliverables, milestones, price, currency, estimated_timeline, exclusions, revision_policy, unresolved, status, share_token, approved_version_id, updated_at")
+    .select("id, title, summary, assumptions, deliverables, milestones, price, currency, estimated_timeline, exclusions, revision_policy, unresolved, status, share_token, approved_version_id, accepted_at, revoked_at, updated_at")
     .eq("share_token", token)
     .in("status", ["approved", "paid"])
     .single();

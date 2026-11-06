@@ -215,6 +215,7 @@ export default async function PublicProposalPage({
           token={token}
           amount={Number(version.price)}
           currency={version.currency}
+          accepted={Boolean(proposal.accepted_at)}
         />
 
         <footer className="pb-8 text-center text-xs text-ink-mute">

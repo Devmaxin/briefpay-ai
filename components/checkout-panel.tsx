@@ -39,22 +39,18 @@ interface CheckoutPanelProps {
   amount: number;
   currency: string;
   clientId: string;
-  /** When true, the client has already accepted via AcceptanceForm — skip terms. */
-  postAcceptance?: boolean;
   proposalPaid: boolean;
 }
 
 /**
- * PayPal checkout panel. When used after AcceptanceFlow (postAcceptance=true),
- * the client has already accepted terms — the panel goes straight to PayPal buttons.
- * When used standalone (postAcceptance=false), it shows its own terms checkbox.
+ * PayPal checkout panel. Acceptance is handled by AcceptanceForm before this
+ * panel is shown, so there is no second acceptance step here.
  */
 export function CheckoutPanel({
   token,
   amount,
   currency,
   clientId,
-  postAcceptance = false,
   proposalPaid,
 }: CheckoutPanelProps) {
   const [phase, setPhase] = useState<Phase>(
@@ -160,33 +156,13 @@ export function CheckoutPanel({
   return (
     <div className="rounded-2xl border border-line bg-white p-6 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="font-display text-xl font-semibold">
-          {postAcceptance ? "Pay with PayPal" : "Accept &amp; pay"}
-        </h2>
+        <h2 className="font-display text-xl font-semibold">Pay with PayPal</h2>
         <Badge variant="sandbox">PayPal Sandbox</Badge>
       </div>
 
-      {!postAcceptance && (
-        <>
-          <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-line bg-parchment p-4 text-sm">
-            <span>
-              I accept this proposal&apos;s scope, timeline, and total of{" "}
-              <strong className="font-mono">{formatMoney(amount, currency)}</strong>.
-              I understand payment is processed by PayPal and BriefPay holds no funds.
-            </span>
-          </label>
-
-          <p className="mt-3 text-sm text-ink-mute">
-            Tick the box above to enable PayPal checkout.
-          </p>
-        </>
-      )}
-
-      {postAcceptance && (
-        <p className="mt-3 text-sm text-ink-mute">
-          Review the total above, then complete payment through PayPal Sandbox.
-        </p>
-      )}
+      <p className="mt-3 text-sm text-ink-mute">
+        Review the total above, then complete payment through PayPal Sandbox.
+      </p>
 
       <div ref={buttonsRef} className="mt-4 min-h-[120px]" aria-live="polite" />
       {!clientId && (

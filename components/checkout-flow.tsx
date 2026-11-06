@@ -9,6 +9,8 @@ interface CheckoutFlowProps {
   token: string;
   amount: number;
   currency: string;
+  /** True when the proposal already has a recorded acceptance. */
+  accepted?: boolean;
 }
 
 /**
@@ -23,8 +25,9 @@ export function CheckoutFlow({
   token,
   amount,
   currency,
+  accepted: initiallyAccepted = false,
 }: CheckoutFlowProps) {
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(initiallyAccepted);
 
   if (accepted) {
     return (
