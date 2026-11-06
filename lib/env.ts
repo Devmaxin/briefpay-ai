@@ -31,7 +31,7 @@ export const serverEnv = {
     return required("GROQ_API_KEY");
   },
   get groqModel(): string {
-    return optional("GROQ_MODEL", "llama-3.3-70b-versatile");
+    return optional("GROQ_MODEL", "openai/gpt-oss-120b");
   },
   get paypalClientId(): string {
     return required("PAYPAL_CLIENT_ID");

@@ -38,7 +38,7 @@ A fake success is never substituted.
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Vercel + `.env.local` | Supabase publishable key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Vercel (secret) only | Server-only: share-link reads + payment writes |
 | `GROQ_API_KEY` | Vercel (secret) + `.env.local` | Server-only Groq key |
-| `GROQ_MODEL` | Vercel + `.env.local` | e.g. `llama-3.3-70b-versatile` (check console.groq.com/docs/models) |
+| `GROQ_MODEL` | Vercel + `.env.local` | e.g. `openai/gpt-oss-120b` (check console.groq.com/docs/models) |
 | `PAYPAL_ENV` | Vercel + `.env.local` | Must be `sandbox` |
 | `PAYPAL_CLIENT_ID` | Vercel (secret) + `.env.local` | Sandbox REST app client id |
 | `PAYPAL_CLIENT_SECRET` | Vercel (secret) only | Server-only Sandbox secret |
