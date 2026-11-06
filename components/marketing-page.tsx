@@ -18,62 +18,64 @@ import { SampleProposal } from "@/components/marketing/sample-proposal";
 const STEPS = [
   {
     n: "001",
-    title: "Paste the brief",
-    body: "Drop in the client's vague email or DM. No formatting needed — typos and all.",
+    title: "Start with the brief",
+    body: "Paste your client's email, message, or project request. BriefPay AI works with the information you already have, even when it's messy or incomplete.",
   },
   {
     n: "002",
-    title: "Answer clarifications",
-    body: "Groq spots the gaps and asks up to five sharp questions. Answer what you know, skip the rest.",
+    title: "Get the right questions",
+    body: "Identify missing details before they become project problems. Get relevant questions that help clarify expectations, scope, timeline, and budget.",
   },
   {
     n: "003",
-    title: "Review and approve",
-    body: "Get a structured draft with scope, milestones, exclusions, and an advisory price. You edit and approve every word.",
+    title: "Build your proposal",
+    body: "Turn the answers into a structured proposal. Review the deliverables, milestones, exclusions, revisions, timeline, and suggested price before approving it.",
   },
   {
     n: "004",
     title: "Share and get paid",
-    body: "Send a public link. Your client accepts the terms and pays through PayPal Sandbox — verified server-side.",
+    body: "Send your client a proposal link. They can review the agreed scope, accept the terms, and proceed to payment through the available checkout flow.",
   },
 ];
 
 const AI_POINTS = [
-  "Scope gaps surfaced before you price the work",
-  "One-line rationale with every clarification question",
-  "Skipped questions stay visible as unresolved in the draft",
+  "Identify missing project requirements before you start.",
+  "Get relevant clarification questions with explanations.",
+  "Surface gaps in scope, timeline, and budget.",
+  "Keep unanswered questions visible when preparing your proposal.",
 ];
 
 const PAYMENT_POINTS = [
-  "Order amount and currency read from the database",
-  "Every capture verified before a proposal is marked paid",
-  "Idempotent retries — never a duplicate payment",
+  "Payment amounts and currencies are based on the approved proposal.",
+  "Checkout is tied to the agreed proposal version.",
+  "Payment captures are verified by the server.",
+  "Retry handling helps prevent duplicate payment records.",
 ];
 
 const FAQS = [
   {
-    q: "Is this real money?",
-    a: "No. This deployment is connected to PayPal Sandbox with test buyer and seller accounts. Payments are simulated, no real funds move, and every checkout is labelled as a Sandbox demo.",
+    q: "Is BriefPay AI free to use?",
+    a: "You can get started without an upfront subscription payment. Any paid features or usage limits will be presented clearly within the product.",
   },
   {
     q: "Does BriefPay hold funds or offer escrow?",
-    a: "No. BriefPay never holds funds, provides escrow, or guarantees delivery. Payment goes through PayPal, and the dashboard only reflects server-verified captures.",
+    a: "No. BriefPay does not hold client funds or provide escrow. Payments are processed through PayPal, and BriefPay records the payment status after server-side verification.",
   },
   {
-    q: "How accurate is the AI pricing?",
-    a: "It is advisory, not a guarantee. Groq suggests a starting price from the brief, but you must review and approve the final amount before sharing anything with a client.",
+    q: "How accurate is the AI-generated pricing?",
+    a: "AI-generated prices are suggestions based on the project information available. They are not guaranteed market rates. You should review and adjust the amount before approving and sharing a proposal.",
   },
   {
-    q: "What happens if I edit a proposal after sharing it?",
-    a: "Editing an approved proposal invalidates the previous approval and supersedes any unpaid checkout session, so a client can never pay for stale terms. Re-approve to issue a fresh link.",
+    q: "What happens when I edit a proposal after sharing it?",
+    a: "Changes to an approved proposal create a new version. The previous approval does not automatically apply to the new terms. Your client must review and approve the updated version before proceeding with payment.",
   },
   {
-    q: "Can my client pay without an account?",
-    a: "Yes. The public link is the client's entire experience: they read the frozen proposal, accept the terms, and continue to PayPal Sandbox. No BriefPay account is required.",
+    q: "Can my client review a proposal without creating a BriefPay account?",
+    a: "Clients can access a shared proposal through its unique link without signing in to your freelancer dashboard. Payment options and any additional PayPal requirements depend on PayPal's checkout eligibility.",
   },
   {
     q: "What do I need to get started?",
-    a: "A free account and a client request. You can draft, edit, approve, and share proposals in the product. This deployment uses PayPal Sandbox for the payment step while live payments are not enabled.",
+    a: "Create a BriefPay account and bring a client request, even if it's just a short email or message. BriefPay AI will help you identify missing information and turn it into a structured proposal.",
   },
 ];
 
@@ -101,9 +103,8 @@ export function MarketingPage() {
           >
             <Badge variant="ai">
               <Sparkles className="size-3.5" aria-hidden />
-              Proposal-to-payment workflow
+              From first conversation to final payment
             </Badge>
-            <Badge variant="sandbox">PayPal Sandbox</Badge>
           </div>
 
           <h1
@@ -118,9 +119,10 @@ export function MarketingPage() {
             className="hero-enter mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft"
             style={HeroDelay(160)}
           >
-            BriefPay AI helps freelancers clarify messy requirements, prepare
-            professional proposals, and collect payments through PayPal — one
-            calm workflow from unclear scope to verified payment.
+            Your clients don&apos;t always know how to explain what they need.
+            BriefPay AI helps you ask the right questions, define the scope,
+            create professional proposals, and collect payments through one
+            streamlined workflow.
           </p>
 
           <div
@@ -141,7 +143,7 @@ export function MarketingPage() {
               href="#sample"
               className="inline-flex h-12 items-center rounded-full border border-line-strong bg-white px-8 text-base font-semibold text-ink transition-[transform,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:border-ink-soft hover:bg-parchment"
             >
-              See a sample proposal
+              Explore a sample proposal
             </Link>
           </div>
 
@@ -149,11 +151,11 @@ export function MarketingPage() {
             className="hero-enter mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-ink-mute"
             style={HeroDelay(300)}
           >
-            <span>Free to start</span>
+            <span>Free to get started</span>
             <span aria-hidden className="size-1 rounded-full bg-line-strong" />
-            <span>No credit card required</span>
+            <span>No complicated proposal templates</span>
             <span aria-hidden className="size-1 rounded-full bg-line-strong" />
-            <span>Sandbox checkout is simulated</span>
+            <span>PayPal checkout currently runs in Sandbox</span>
           </p>
 
           <HeroWorkflow />
@@ -167,14 +169,16 @@ export function MarketingPage() {
       >
         <Reveal>
           <p className="font-mono text-[11px] tracking-[0.1em] text-ai uppercase">
-            How it works
+            A simpler way to handle client projects
           </p>
           <h2 className="mt-2 max-w-xl font-display text-3xl font-semibold sm:text-4xl">
-            From vague to paid in <em className="text-primary">four steps.</em>
+            From the first request to a{" "}
+            <em className="text-primary">paid project</em> in four steps.
           </h2>
           <p className="mt-3 max-w-2xl leading-relaxed text-ink-soft">
-            One place to understand the request, shape the scope, and get to a
-            payment your client can complete without another call.
+            Stop piecing together client requirements across emails, messages,
+            documents, and payment links. BriefPay brings the proposal process
+            together so you can focus on getting the work done.
           </p>
         </Reveal>
 
@@ -216,17 +220,16 @@ export function MarketingPage() {
           <Reveal>
             <p className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.1em] text-ai uppercase">
               <MessageCircleQuestionMark className="size-3.5" aria-hidden />
-              AI clarifications
+              Better questions. Clearer projects.
             </p>
             <h2 className="mt-2 font-display text-3xl font-semibold">
-              The AI asks what <em className="text-ai">you&apos;d</em> forget to
-              ask.
+              Know what to ask{" "}
+              <em className="text-ai">before you agree</em> to the work.
             </h2>
             <p className="mt-3 leading-relaxed text-ink-soft">
-              Groq reads the raw request, identifies missing scope, timeline,
-              and budget signals, and proposes up to five high-value questions —
-              each with a one-line reason why it matters. You answer what you
-              can; anything skipped is flagged as unresolved in the draft.
+              A vague request can hide important details. BriefPay AI examines
+              the client&apos;s requirements and helps you identify what still
+              needs to be clarified before you prepare a proposal.
             </p>
             <ul className="mt-5 space-y-2.5">
               {AI_POINTS.map((point) => (
@@ -242,25 +245,26 @@ export function MarketingPage() {
               ))}
             </ul>
             <p className="mt-4 text-sm text-ink-mute">
-              Estimates are advisory, never guarantees. Every price and every
-              line of scope waits for your explicit approval.
+              Your AI-generated suggestions are starting points, not final
+              decisions. You remain in control of the scope, pricing, and terms
+              you share with your client.
             </p>
           </Reveal>
 
           <Reveal delay={120}>
             <p className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.1em] text-verified uppercase">
               <Wallet className="size-3.5" aria-hidden />
-              Verified checkout
+              From approval to payment
             </p>
             <h2 className="mt-2 font-display text-3xl font-semibold">
-              Verified payment, <em className="text-verified">not vibes.</em>
+              Every payment should{" "}
+              <em className="text-verified">match the agreement.</em>
             </h2>
             <p className="mt-3 leading-relaxed text-ink-soft">
-              The client accepts the frozen proposal version and pays through
-              PayPal Sandbox. Your server creates the order from the database
-              price, captures after buyer approval, and verifies the order id,
-              capture id, amount, currency, and payee before anything is marked
-              paid.
+              A proposal is more than a price. It&apos;s an agreement about what
+              will be delivered. BriefPay connects client approval to the
+              specific proposal version being paid for, helping prevent payment
+              confusion when project details change.
             </p>
             <ul className="mt-5 space-y-2.5">
               {PAYMENT_POINTS.map((point) => (
@@ -276,7 +280,12 @@ export function MarketingPage() {
               ))}
             </ul>
             <p className="mt-4 text-sm text-ink-mute">
-              This deployment runs in PayPal Sandbox. No real money moves.
+              BriefPay does not hold client funds or provide escrow. Payment
+              processing is handled through PayPal.
+            </p>
+            <p className="mt-3 rounded-xl border border-caution/30 bg-caution-soft px-3.5 py-2.5 text-xs leading-relaxed text-caution">
+              PayPal Sandbox is currently enabled. Transactions are simulated
+              and no real money moves.
             </p>
           </Reveal>
         </div>
@@ -292,14 +301,15 @@ export function MarketingPage() {
       >
         <Reveal>
           <p className="font-mono text-[11px] tracking-[0.1em] text-ai uppercase">
-            FAQ
+            Frequently asked questions
           </p>
           <h2 className="mt-2 font-display text-3xl font-semibold">
-            Honest answers.
+            Everything you need to know{" "}
+            <em className="text-primary">before getting started.</em>
           </h2>
           <p className="mt-3 max-w-xl leading-relaxed text-ink-soft">
-            Clear boundaries, no invented customers, and no claims we cannot
-            verify.
+            Understand how BriefPay works, what it handles, and where you remain
+            in control.
           </p>
         </Reveal>
 
@@ -315,19 +325,20 @@ export function MarketingPage() {
             />
             <div className="relative">
               <h2 className="font-display text-3xl font-semibold text-balance sm:text-4xl">
-                Your next vague email is{" "}
-                <em className="text-parchment">already waiting.</em>
+                Make your next client conversation{" "}
+                <em className="text-parchment">count.</em>
               </h2>
               <p className="mx-auto mt-3 max-w-md text-white/70">
-                Turn it into a proposal that gets paid — clarify, draft, share,
-                and verify, all in one place.
+                Turn unclear requests into clear agreements. Ask better
+                questions, prepare professional proposals, and move projects
+                towards payment without the usual back-and-forth.
               </p>
               <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
                 <Link
                   href="/signup"
                   className="group inline-flex h-12 items-center gap-2 rounded-full bg-white px-8 text-base font-semibold text-ink transition-[transform,background-color] duration-200 hover:-translate-y-0.5 hover:bg-parchment"
                 >
-                  Start free
+                  Create your first proposal
                   <ArrowRight
                     className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
                     aria-hidden
@@ -337,13 +348,9 @@ export function MarketingPage() {
                   href="#how"
                   className="inline-flex h-12 items-center rounded-full border border-white/25 px-7 text-base font-semibold text-white transition-colors hover:bg-white/10"
                 >
-                  See how it works
+                  Explore how it works
                 </Link>
               </div>
-              <p className="mt-4 text-xs text-white/50">
-                PayPal Sandbox in this deployment — simulated payments, no real
-                money.
-              </p>
             </div>
           </div>
         </Reveal>

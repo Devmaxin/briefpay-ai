@@ -56,8 +56,9 @@ export function SiteFooter() {
         <div>
           <Logo />
           <p className="mt-3 max-w-xs text-sm text-ink-mute">
-            From vague to paid — clarify requirements, prepare professional
-            proposals, and collect payments through PayPal.
+            From the first client request to the final payment. Clarify
+            requirements, create professional proposals, and manage client
+            approvals in one place.
           </p>
         </div>
         <nav aria-label="Footer" className="flex flex-col gap-2 text-sm">
@@ -71,23 +72,29 @@ export function SiteFooter() {
             Sample proposal
           </Link>
           <Link href="/dashboard/new" className="text-ink-soft hover:text-ink">
-            New proposal
+            Create a proposal
+          </Link>
+          <Link href="/#faq" className="text-ink-soft hover:text-ink">
+            FAQ
           </Link>
         </nav>
         <div className="flex flex-col gap-2 text-sm">
           <span className="font-mono text-[11px] tracking-[0.08em] text-ink-mute uppercase">
-            Payment environment
+            Payment information
           </span>
           <p className="max-w-xs text-ink-mute">
-            Checkout runs in PayPal Sandbox — payments are simulated and no real
-            money moves. BriefPay does not hold funds or provide escrow.
+            Payments are processed through PayPal. This deployment currently
+            uses PayPal Sandbox for simulated transactions. BriefPay does not
+            hold funds or provide escrow.
           </p>
         </div>
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 text-xs text-ink-mute sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© 2026 BriefPay AI. All rights reserved.</span>
-          <span className="font-mono">PAYPAL SANDBOX — SIMULATED PAYMENTS</span>
+          <span className="font-mono">
+            PAYPAL SANDBOX · SIMULATED TRANSACTIONS
+          </span>
         </div>
       </div>
     </footer>

@@ -11,22 +11,21 @@ import {
   RotateCcw,
   Wallet,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Reveal, useInView } from "@/components/marketing/reveal";
 import { formatMoney } from "@/lib/utils";
 
 const DELIVERABLES = [
   {
-    title: "Homepage & menu pages",
-    body: "A new editorial layout with photography-ready sections and a mobile-first menu.",
+    title: "01. Homepage & menu pages",
+    body: "A custom website layout with clear navigation, product photography sections, and a mobile-friendly menu.",
   },
   {
-    title: "Cake pre-order form",
-    body: "Date picker, pickup options, order summary, and automatic email confirmations.",
+    title: "02. Cake pre-order experience",
+    body: "A streamlined ordering form with date selection, pickup options, and order summaries.",
   },
   {
-    title: "Launch & handover",
-    body: "Deployed and tested, with a 30-minute walkthrough and a short handover guide.",
+    title: "03. Launch & handover",
+    body: "A tested website, deployment, and a guided handover covering the essential features.",
   },
 ];
 
@@ -48,14 +47,16 @@ export function SampleProposal() {
     >
       <Reveal>
         <p className="font-mono text-[11px] tracking-[0.1em] text-ai uppercase">
-          Sample proposal
+          A look inside a BriefPay proposal
         </p>
         <h2 className="mt-2 font-display text-3xl font-semibold sm:text-4xl">
-          What your client <em className="text-primary">sees.</em>
+          A clearer agreement starts with a{" "}
+          <em className="text-primary">better proposal.</em>
         </h2>
         <p className="mt-3 max-w-xl leading-relaxed text-ink-soft">
-          A focused document with the scope, timeline, and price decided up
-          front — then a single acceptance step and a verified Sandbox payment.
+          Give your client a professional document that makes the project easy
+          to understand. Every deliverable, deadline, revision, and payment
+          amount is laid out before work begins.
         </p>
       </Reveal>
 
@@ -71,9 +72,8 @@ export function SampleProposal() {
           >
             <p className="flex items-center gap-2 font-mono text-[10px] tracking-[0.12em] text-ink-mute uppercase">
               <FileText className="size-3.5" aria-hidden />
-              Proposal · v1 · Sample
+              PROJECT PROPOSAL · SAMPLE
             </p>
-            <Badge variant="neutral">Demo data</Badge>
           </div>
 
           <div className="mt-5 flex flex-wrap items-start justify-between gap-4">
@@ -87,7 +87,7 @@ export function SampleProposal() {
               <p className="font-mono text-[10px] tracking-[0.12em] text-ink-mute uppercase">
                 Prepared by
               </p>
-              <p className="mt-1 text-sm font-medium">Your studio</p>
+              <p className="mt-1 text-sm font-medium">Your Studio</p>
             </div>
           </div>
 
@@ -101,14 +101,22 @@ export function SampleProposal() {
             className="sample-anim mt-3 leading-relaxed text-ink-soft"
             style={step(220)}
           >
-            A modern, mobile-first website for Fern &amp; Field Bakery with a
-            browsable menu and a simple cake pre-order flow, ready before the
-            holiday rush.
+            A modern, mobile-first website for Fern &amp; Field Bakery, featuring
+            a browsable product menu and a simple cake pre-order experience.
+            Designed to make it easier for customers to explore products and
+            place orders.
+          </p>
+          <p
+            className="sample-anim mt-3 text-xs leading-relaxed text-ink-mute"
+            style={step(260)}
+          >
+            This sample illustrates how a proposal can be presented. The scope,
+            timeline, and price are illustrative.
           </p>
 
           <h4
             className="sample-anim mt-7 font-mono text-[11px] font-semibold tracking-[0.12em] text-primary-deep uppercase"
-            style={step(280)}
+            style={step(300)}
           >
             Deliverables
           </h4>
@@ -133,14 +141,20 @@ export function SampleProposal() {
             ))}
           </ul>
 
+          <h4
+            className="sample-anim mt-7 font-mono text-[11px] font-semibold tracking-[0.12em] text-primary-deep uppercase"
+            style={step(560)}
+          >
+            Project details
+          </h4>
           <div
-            className="sample-anim mt-6 grid gap-4 rounded-2xl bg-parchment p-5 sm:grid-cols-3"
+            className="sample-anim mt-2 grid gap-4 rounded-2xl bg-parchment p-5 sm:grid-cols-3"
             style={step(600)}
           >
             <div>
               <p className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-ink-mute uppercase">
                 <CalendarDays className="size-3.5" aria-hidden />
-                Timeline
+                Estimated timeline
               </p>
               <p className="mt-1 font-medium">3 weeks</p>
             </div>
@@ -154,9 +168,9 @@ export function SampleProposal() {
             <div>
               <p className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-ink-mute uppercase">
                 <Wallet className="size-3.5" aria-hidden />
-                Payment
+                Payment method
               </p>
-              <p className="mt-1 text-sm">PayPal Sandbox</p>
+              <p className="mt-1 text-sm">PayPal</p>
             </div>
           </div>
 
@@ -166,15 +180,15 @@ export function SampleProposal() {
           >
             <div>
               <p className="font-mono text-[10px] tracking-[0.08em] text-primary-deep uppercase">
-                Total due
+                Total project price
               </p>
               <p className="mt-1 font-mono text-3xl font-semibold tracking-tight">
                 {formatMoney(1800, "USD")}
               </p>
             </div>
-            <p className="max-w-[15rem] text-xs leading-relaxed text-ink-mute">
-              Fixed for this version. Editing the proposal creates a new version
-              and a fresh approval.
+            <p className="max-w-[17rem] text-xs leading-relaxed text-ink-mute">
+              Once a proposal is approved, its terms are preserved. Changes
+              create a new version that requires a fresh client approval.
             </p>
           </div>
 
@@ -182,11 +196,14 @@ export function SampleProposal() {
             className="sample-anim mt-5 flex items-start gap-2.5 rounded-xl border border-line bg-parchment/70 px-4 py-3 text-xs leading-relaxed text-ink-soft"
             style={step(780)}
           >
-            <LockKeyhole className="mt-0.5 size-4 shrink-0 text-verified" aria-hidden />
+            <LockKeyhole
+              className="mt-0.5 size-4 shrink-0 text-verified"
+              aria-hidden
+            />
             <p>
-              The client accepts this frozen version, then pays through PayPal
-              Sandbox. This sample is illustrative — no acceptance or payment is
-              recorded.
+              The client reviews and accepts the agreed proposal before
+              proceeding to checkout. This deployment uses PayPal Sandbox, so no
+              real payment is collected.
             </p>
           </div>
 
@@ -196,7 +213,7 @@ export function SampleProposal() {
             style={step(860)}
           >
             <FileText className="size-4" aria-hidden />
-            Create one like this
+            Create your first proposal
             <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
