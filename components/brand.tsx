@@ -6,14 +6,14 @@ export function Logo({ className }: { className?: string }) {
     <Link
       href="/"
       className={cn("flex items-center gap-2.5", className)}
-      aria-label="BriefPay AI home"
+      aria-label="B BriefPay AI home"
     >
       <span
         aria-hidden
         className="grid size-9 place-items-center rounded-xl bg-ink font-display text-lg font-bold text-white italic"
       >
         B
-      </span>
+      </span>{" "}
       <span className="font-display text-xl font-semibold tracking-tight text-ink">
         BriefPay <span className="text-ai italic">AI</span>
       </span>

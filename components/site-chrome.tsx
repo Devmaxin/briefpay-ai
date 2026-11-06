@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand";
+import { MobileMenu } from "@/components/mobile-menu";
 
 const links = [
   { href: "/#how", label: "How it works" },
@@ -10,7 +11,7 @@ const links = [
 
 export function SiteHeader({ signedIn }: { signedIn: boolean }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-parchment/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-parchment/90 backdrop-blur supports-[backdrop-filter]:bg-parchment/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Logo />
         <nav aria-label="Primary" className="hidden items-center gap-7 md:flex">
@@ -24,7 +25,7 @@ export function SiteHeader({ signedIn }: { signedIn: boolean }) {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 md:flex">
           {signedIn ? (
             <Link href="/dashboard">
               <Button size="sm">Open dashboard</Button>
@@ -42,6 +43,7 @@ export function SiteHeader({ signedIn }: { signedIn: boolean }) {
             </>
           )}
         </div>
+        <MobileMenu signedIn={signedIn} />
       </div>
     </header>
   );
@@ -74,18 +76,18 @@ export function SiteFooter() {
         </nav>
         <div className="flex flex-col gap-2 text-sm">
           <span className="font-mono text-[11px] tracking-[0.08em] text-ink-mute uppercase">
-            Demo notice
+            Payment environment
           </span>
           <p className="max-w-xs text-ink-mute">
-            Hackathon MVP. Checkout runs in PayPal Sandbox — no real money
-            moves. BriefPay does not hold funds or provide escrow.
+            Checkout runs in PayPal Sandbox — payments are simulated and no real
+            money moves. BriefPay does not hold funds or provide escrow.
           </p>
         </div>
       </div>
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 text-xs text-ink-mute sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span>© 2026 BriefPay AI. Built for the PayPal AI Hackathon.</span>
-          <span className="font-mono">SANDBOX DEMO — NOT REAL PAYMENTS</span>
+          <span>© 2026 BriefPay AI. All rights reserved.</span>
+          <span className="font-mono">PAYPAL SANDBOX — SIMULATED PAYMENTS</span>
         </div>
       </div>
     </footer>

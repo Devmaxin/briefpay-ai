@@ -166,7 +166,7 @@ export function AuthForm({
             {isConfirming
               ? "Your account exists but is not active until you confirm the address."
               : isSignup
-                ? "Free for the hackathon demo. No credit card required."
+                ? "Free to try. No credit card required."
                 : "Sign in to manage your proposals and payments."}
           </CardDescription>
         </CardHeader>

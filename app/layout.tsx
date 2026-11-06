@@ -33,6 +33,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${fraunces.variable} ${plexMono.variable} flex min-h-full flex-col font-sans antialiased`}
       >
+        <noscript>
+          <style>{`[data-reveal="out"], [data-sample="out"] .sample-anim { opacity: 1 !important; transform: none !important; }`}</style>
+        </noscript>
         {children}
       </body>
     </html>

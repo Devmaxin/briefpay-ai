@@ -1,7 +1,6 @@
 # BriefPay AI — From vague to paid
 
 Turn vague client requests into structured proposals and verified PayPal payments.
-Built for the PayPal AI Hackathon.
 
 **Workflow:** freelancer signs in → pastes a vague request → Groq asks clarifying
 questions → Groq drafts a structured proposal → freelancer edits & approves →
@@ -211,7 +210,7 @@ What the automated suite cannot cover without credentials: live signup/login,
 cookie/session rotation, and Postgres RLS enforcement. Those are listed in the
 manual checklist below.
 
-## Hackathon demo script (≈5 min)
+## Demo script (≈5 min)
 
 1. **Hook (30s):** “Freelancers lose deals to vague scope. Watch a rambling
    bakery email become verified money.”

@@ -43,7 +43,7 @@ export const serverEnv = {
     const env = optional("PAYPAL_ENV", "sandbox");
     if (env !== "sandbox") {
       throw new Error(
-        "PAYPAL_ENV must be 'sandbox' for this hackathon MVP. Live payments are not enabled.",
+        "PAYPAL_ENV must be 'sandbox' for this deployment. Live payments are not enabled.",
       );
     }
     return "sandbox";
